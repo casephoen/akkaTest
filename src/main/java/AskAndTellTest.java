@@ -4,18 +4,18 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 
 
-public class Hello extends UntypedActor {
-
+public class AskAndTellTest extends UntypedActor {
+    static long t1 = 0;
     public static void main(String[] args) throws Exception {
-        //System.out.println("Hello World!");
+        //System.out.println("AskAndTellTest World!");
         ActorSystem actorSystem = ActorSystem.create("akka");
         //System.out.println(actorSystem.settings());
-        ActorRef rcActor = actorSystem.actorOf(Props.create(Hello.class), "helloWorld");
+        ActorRef rcActor = actorSystem.actorOf(Props.create(AskAndTellTest.class), "AskAndTellTest");
         System.out.println(rcActor);
 
         ActorRef actor3 = actorSystem.actorOf(Props.create(Actor03.class), "actor3");
         Thread.sleep(1000L);
-        long t1 = System.currentTimeMillis();
+        t1 = System.currentTimeMillis();
         int n = 5000000;
         for (int i = 0; i < n; i++) {
             actor3.tell("hello 33333!!",rcActor);
@@ -48,7 +48,8 @@ public class Hello extends UntypedActor {
 
     @Override
     public void postStop() throws Exception {
-        System.err.println("hello stopped "+i);
+        System.err.print("hello stopped "+i);
+        System.out.println("cost "+(System.currentTimeMillis() - t1));
         super.postStop();
     }
 }

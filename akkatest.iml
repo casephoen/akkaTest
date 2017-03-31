@@ -64,5 +64,7 @@
     <orderEntry type="library" name="Maven: com.typesafe.akka:akka-http-xml-experimental_2.11:2.4.7" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang.modules:scala-xml_2.11:1.0.5" level="project" />
     <orderEntry type="library" name="Maven: com.typesafe.akka:akka-persistence-query-experimental_2.11:2.4.7" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.7" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.7" level="project" />
   </component>
 </module>
