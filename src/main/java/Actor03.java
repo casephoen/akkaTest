@@ -7,6 +7,9 @@ public class Actor03 extends UntypedActor {
 	public void onReceive(Object arg0) throws Exception {
 		i++;
 		switch (i){
+			//case 100000:
+			//	getContext().stop(self());
+			//	break;
 			case 1:
 				t1 = System.currentTimeMillis();
 				break;

@@ -40,33 +40,33 @@ public class JdkBlockingQueueTest {
         log.info("invoke consume cost {} ms", t2 - t1);
 
         //生产者
-        int msgNumPerFuture = 5;
-        //for (int i = 0; i < n / msgNumPerFuture; i++) { //akka fork-join 缺省并行线程64个
-        //    Future<String> f1 = future(new Callable<String>() { //多生产者
-        //        public String call() {
-        //            for (int i = 0; i < msgNumPerFuture; i++) {
-        //                try {
-        //                    concurrentLinkedQueue.put("1");
-        //                } catch (InterruptedException e) {
-        //                }
-        //                countDownLatch.countDown();
-        //            }
-        //            return "1";
-        //        }
-        //    }, actorSystem.dispatcher());
-        //}
-        Future<String> f1 = future(new Callable<String>() {
-            public String call() {
-                for (int i = 0; i < n; i++) {
-                    try {
-                        concurrentLinkedQueue.put("1");
-                    } catch (InterruptedException e) {
+        int msgNumPerFuture = 1;
+        for (int i = 0; i < n / msgNumPerFuture; i++) { //akka fork-join 缺省并行线程64个
+            Future<String> f1 = future(new Callable<String>() { //多生产者
+                public String call() {
+                    for (int i = 0; i < msgNumPerFuture; i++) {
+                        try {
+                            concurrentLinkedQueue.put("1");
+                        } catch (InterruptedException e) {
+                        }
+                        countDownLatch.countDown();
                     }
-                    countDownLatch.countDown();
+                    return "1";
                 }
-                return "1";
-            }
-        }, actorSystem.dispatcher());
+            }, actorSystem.dispatcher());
+        }
+        //Future<String> f1 = future(new Callable<String>() {
+        //    public String call() {
+        //        for (int i = 0; i < n; i++) {
+        //            try {
+        //                concurrentLinkedQueue.put("1");
+        //            } catch (InterruptedException e) {
+        //            }
+        //            countDownLatch.countDown();
+        //        }
+        //        return "1";
+        //    }
+        //}, actorSystem.dispatcher());
         long t3 = System.currentTimeMillis();
         log.info("invoke produce cost {} ms. concurrentLinkedQueue.size()={}", t3 - t2, concurrentLinkedQueue.size());
 
@@ -76,7 +76,8 @@ public class JdkBlockingQueueTest {
         } catch (InterruptedException e) {
         }
         long t4 = System.currentTimeMillis();
-        log.info("produce consume total cost {} ms", t4 - t1);
+        final long l = t4 - t1;
+        log.info("produce consume {}, total cost {} ms, speed: {}/s", n, l, 1000L * n / l);
 
         actorSystem.terminate();
     }

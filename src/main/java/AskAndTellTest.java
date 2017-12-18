@@ -6,6 +6,8 @@ import akka.actor.UntypedActor;
 
 public class AskAndTellTest extends UntypedActor {
     static long t1 = 0;
+    static int n = 500_0000;
+
     public static void main(String[] args) throws Exception {
         //System.out.println("AskAndTellTest World!");
         ActorSystem actorSystem = ActorSystem.create("akka");
@@ -16,9 +18,12 @@ public class AskAndTellTest extends UntypedActor {
         ActorRef actor3 = actorSystem.actorOf(Props.create(Actor03.class), "actor3");
         Thread.sleep(1000L);
         t1 = System.currentTimeMillis();
-        int n = 5000000;
         for (int i = 0; i < n; i++) {
-            actor3.tell("hello 33333!!",rcActor);
+            try {
+                actor3.tell("hello 33333!!", rcActor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //Future<Object> future = Patterns.ask(actor3, "hello 33333!!", 20000L);
             //FutureConverters.toJava(future).whenComplete((o, throwable) -> {
             //    //if (o.equals(n))
@@ -41,6 +46,7 @@ public class AskAndTellTest extends UntypedActor {
     }
 
     int i = 0;
+
     public void onReceive(Object message) throws Exception {
         i++;
         //System.out.println(Thread.currentThread() + " " + getSelf() + " received " + message + " from " + getSender());
@@ -48,8 +54,9 @@ public class AskAndTellTest extends UntypedActor {
 
     @Override
     public void postStop() throws Exception {
-        System.err.print("hello stopped "+i);
-        System.out.println("cost "+(System.currentTimeMillis() - t1));
+        System.err.println("hello stopped " + i);
+        final long l = System.currentTimeMillis() - t1;
+        System.err.println("cost " + l + " speed " + (1000L * n / l) + "/s");
         super.postStop();
     }
 }
